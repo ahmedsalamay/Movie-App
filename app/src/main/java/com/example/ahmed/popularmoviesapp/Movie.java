@@ -21,7 +21,7 @@ public class Movie {
      * vote_average : 5.92
      */
     private String poster_path;
-    private int path;
+    public int path;
     private String overview;
     private String release_date;
     private int id;
