@@ -21,6 +21,7 @@ public class Movie {
      * vote_average : 5.92
      */
     private String poster_path;
+    private int path;
     private String overview;
     private String release_date;
     private int id;
@@ -33,6 +34,10 @@ public class Movie {
         this.poster_path = poster_path;
         this.release_date = release_date;
         this.vote_average = vote_average;
+    }
+
+    public Movie(int path) {
+        this.path =path;
     }
 
     public String getPoster_path() {
