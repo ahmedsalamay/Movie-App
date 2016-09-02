@@ -9,6 +9,7 @@
     android:stretchMode="columnWidth"
     android:columnWidth="150dp"
     android:id="@+id/grid_view"
+    tools:context=".MainActivityFragment"
     >
 
 </GridView>
