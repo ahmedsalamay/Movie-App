@@ -19,7 +19,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'Movie_MAP_API_KEY', "\"244e23f58f9f1468b298d7d9069d9b91\" "
-               }
+    }
 }
 
 dependencies {
@@ -28,7 +28,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:design:24.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:support-v4:24.2.0'
 }
+
+
 
 
 repositories {
