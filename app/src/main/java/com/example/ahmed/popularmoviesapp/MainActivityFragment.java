@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,13 @@ public class MainActivityFragment extends Fragment {
         gridView.setAdapter(mMovieAdapter);
         TMDBQuerry tmdbQuerry=new TMDBQuerry();
         tmdbQuerry.execute(BASE_URL+BuildConfig.Movie_MAP_API_KEY);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String test=mMovieAdapter.getItem(position).getOriginal_title();
+                Toast.makeText(getActivity(),test,Toast.LENGTH_SHORT).show();
+            }
+        });
         return rootView;
 
     }
