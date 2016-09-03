@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+
+import java.util.Arrays;
 
 public class MainActivityFragment extends Fragment {
-    Movie [] movie= {
+    private MovieAdapter mMovieAdapter;
+    Movie [] movies= {
     new Movie(R.drawable.cupcake),
     new Movie( R.drawable.donut),
     new Movie( R.drawable.eclair),
@@ -23,8 +27,15 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView=inflater.inflate(R.layout.grid_view,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.grid_view, container, false);
+
+        mMovieAdapter = new MovieAdapter(getActivity(),Arrays.asList(movies));
+
+        // Get a reference to the ListView, and attach this adapter to it.
+        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
+        gridView.setAdapter(mMovieAdapter);
 
         return rootView;
     }
