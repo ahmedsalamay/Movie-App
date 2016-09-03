@@ -16,6 +16,7 @@ import java.util.List;
 public class MovieAdapter extends ArrayAdapter<Movie> {
     private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
     private static final String BASE_URL="http://image.tmdb.org/t/p/w185//";
+    private Activity Context;
 
     /**
      * This is our own custom constructor (it doesn't mirror a superclass constructor).
@@ -31,6 +32,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         // Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
         // going to use this second argument, so it can be any value. Here, we used 0.
         super(context, 0, Movies);
+        Context=context;
     }
 
     /**
@@ -57,11 +59,8 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         }
 
         ImageView iconView = (ImageView) convertView.findViewById(R.id.movie_image);
-        //iconView.setImageResource(movie.path);
-        Picasso.with(getContext()).load(BASE_URL+movie.getPoster_path()).into(iconView );
+        Picasso.with(Context).load(BASE_URL+movie.getPoster_path()).into(iconView );
         Log.e(LOG_TAG,"Picasso");
-
-
         return convertView;
     }
 }
