@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class MainActivityFragment extends Fragment {
     private MovieAdapter mMovieAdapter;
-    Movie [] movies= {
+    /*Movie [] movies= {
     new Movie(R.drawable.cupcake),
     new Movie( R.drawable.donut),
     new Movie( R.drawable.eclair),
@@ -22,7 +22,8 @@ public class MainActivityFragment extends Fragment {
     new Movie( R.drawable.jellybean),
     new Movie( R.drawable.kitkat),
     new Movie( R.drawable.lollipop)
-     };
+     };*/
+    ArrayList<Movie> movies=QueryUtils.extractMovies();
     public MainActivityFragment(){
     }
 
@@ -31,7 +32,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.grid_view, container, false);
 
-        mMovieAdapter = new MovieAdapter(getActivity(),Arrays.asList(movies));
+        mMovieAdapter = new MovieAdapter(getActivity(),movies);
 
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);

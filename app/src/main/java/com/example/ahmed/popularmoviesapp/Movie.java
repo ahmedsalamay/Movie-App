@@ -26,9 +26,9 @@ public class Movie {
     private String release_date;
     private int id;
     private String original_title;
-    private double vote_average;
+    private String vote_average;
 
-    public Movie(String original_title, String overview, String poster_path, String release_date, double vote_average) {
+    public Movie(String original_title, String overview, String poster_path, String release_date, String vote_average) {
         this.original_title = original_title;
         this.overview = overview;
         this.poster_path = poster_path;
@@ -80,11 +80,11 @@ public class Movie {
             this.original_title = original_title;
         }
 
-        public double getVote_average() {
+        public String getVote_average() {
             return vote_average;
         }
 
-        public void setVote_average(double vote_average) {
+        public void setVote_average(String vote_average) {
             this.vote_average = vote_average;
         }
     }
