@@ -9,9 +9,10 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
+//BuildConfig.OPEN_WEATHER_MAP_API_KEY
 public class MainActivityFragment extends Fragment {
     private MovieAdapter mMovieAdapter;
-    /*Movie [] movies= {
+  /*  Movie [] movies= {
     new Movie(R.drawable.cupcake),
     new Movie( R.drawable.donut),
     new Movie( R.drawable.eclair),
@@ -32,7 +33,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.grid_view, container, false);
 
-        mMovieAdapter = new MovieAdapter(getActivity(),movies);
+        mMovieAdapter = new MovieAdapter(getActivity(), movies);
 
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
