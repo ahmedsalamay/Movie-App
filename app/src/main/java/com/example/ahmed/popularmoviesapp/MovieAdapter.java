@@ -2,7 +2,6 @@ package com.example.ahmed.popularmoviesapp;
 
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         ImageView iconView = (ImageView) convertView.findViewById(R.id.movie_image);
         Picasso.with(Context).load(BASE_URL+movie.getPoster_path()).into(iconView );
-        Log.e(LOG_TAG,"Picasso");
+
         return convertView;
     }
 }

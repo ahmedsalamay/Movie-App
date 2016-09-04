@@ -1,54 +1,92 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
-    tools:context="com.example.ahmed.popularmoviesapp.DetailActivityFragment">
+    tools:context="com.example.ahmed.popularmoviesapp.DetailActivityFragment"
+    android:weightSum="1">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.37"
+        android:gravity="center_vertical"
+        android:textColor="#ffffff"
+        android:padding="32dp"
+        android:textSize="40sp"
+        android:id="@+id/dMovieTitle"
+        tools:text="Civil War"
+        android:background="#6fc39e" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
+            <ImageView
+                android:layout_width="149dp"
+                android:layout_height="223dp"
+                android:id="@+id/dMoviePoster"
+                tools:src="@drawable/inter"
+                android:layout_marginLeft="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dMovieDate"
+                    tools:text="2016"
+                    android:padding="4dp"
+                    android:textSize="34sp"
+                    android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dMovieTime"
+                    tools:text="120min"
+                    android:padding="4dp"
+                    android:textSize="24sp"
+                    android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:id="@+id/dMovieRate"
+                    tools:text="9.5/10"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+        </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:maxLines = "3"
+        android:scrollbars = "vertical"
+        android:layout_weight="0"
+        android:id="@+id/dMovieOverview"
+        tools:text="Following the events of Age of Ultron, the collective governments of
+the world pass an act designed to regulate all superhuman activity.
+This polarizes opinion amongst the Avengers, causing two factions
+to side with Iron Man or Captain America, which causes
+an epic battle between former allies"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#FF000000"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="15"
-        android:background="@color/abc_search_url_text"
-      />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="45">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="80">
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="50" />
-      <LinearLayout
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          android:layout_weight="50">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-      </LinearLayout>
-        </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="20"/>
-    </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="20"/>
+        android:padding="16dp"
+        android:id="@+id/dMovieTrailer"
+        tools:text="Tlairer 1
+Trailer 2"
+        android:layout_weight="0.69" />
+
+
 </LinearLayout>
