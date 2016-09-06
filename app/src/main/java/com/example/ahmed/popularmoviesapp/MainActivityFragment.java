@@ -2,8 +2,10 @@ package com.example.ahmed.popularmoviesapp;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,8 @@ import java.util.List;
 //BuildConfig.OPEN_WEATHER_MAP_API_KEY
 public class MainActivityFragment extends Fragment {
     private MovieAdapter mMovieAdapter;
-    private static final String BASE_URL="http://api.themoviedb.org/3/movie/popular?api_key=";
+    private static final String BASE_URL="http://api.themoviedb.org/3/movie/";
+    private static final String KEY_QUERY="?api_key=";
     List<Movie> movies;
     public MainActivityFragment(){
     }
@@ -32,7 +35,18 @@ public class MainActivityFragment extends Fragment {
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
         gridView.setAdapter(mMovieAdapter);
         TMDBQuerry tmdbQuerry=new TMDBQuerry();
-        tmdbQuerry.execute(BASE_URL+BuildConfig.Movie_MAP_API_KEY);
+
+        SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences
+                (getActivity());
+        String sortBy=sharedPreferences.getString(
+                getString(R.string.key_sort_type),
+                getString(R.string.defualt_sort_type)
+        );
+        StringBuilder uriString=new StringBuilder();
+        uriString.append(BASE_URL).append(sortBy)
+                .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
+
+        tmdbQuerry.execute(uriString.toString());
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -42,32 +42,32 @@ public class DetailActivityFragment extends Fragment {
         Intent intent=getActivity().getIntent();
         if(intent!=null&&intent.hasExtra(Intent.EXTRA_TEXT)){
             String info =intent.getStringExtra(Intent.EXTRA_TEXT);
-            ArrayList<String> A=new ArrayList<>();
+            ArrayList<String> movieInfo=new ArrayList<>();
             for (String retval: info.split("\\+")){
-                A.add(retval);
+                movieInfo.add(retval);
             }
 
-            original_title=A.get(0);
-            poster_path=A.get(1);
-            overview=A.get(2);
-            release_date=A.get(3);
-            vote_average=A.get(4);
+            original_title=movieInfo.get(0);
+            poster_path=movieInfo.get(1);
+            overview=movieInfo.get(2);
+            release_date=movieInfo.get(3);
+            vote_average=movieInfo.get(4);
 
-            TextView v=(TextView)rootView.findViewById(R.id.dMovieTitle);
-            v.setText(original_title);
-            ImageView imageView=(ImageView)rootView.findViewById(R.id.dMoviePoster);
-            Picasso.with(getContext()).load(BASE_URL+poster_path).into(imageView );
-            TextView v1=(TextView)rootView.findViewById(R.id.dMovieDate);
-            v1.setText(release_date);
-            TextView v2=(TextView)rootView.findViewById(R.id.dMovieRate);
-            v2.setText(vote_average);
-            TextView v3=(TextView)rootView.findViewById(R.id.dMovieTime);
-            v3.setText(release_date);
-            TextView v4=(TextView)rootView.findViewById(R.id.dMovieOverview);
-            v4.setText(overview);
-            v4.setMovementMethod(new ScrollingMovementMethod());
-            TextView v5=(TextView)rootView.findViewById(R.id.dMovieTrailer);
-            v5.setText(overview);
+            TextView titleView=(TextView)rootView.findViewById(R.id.dMovieTitle);
+            titleView.setText(original_title);
+            ImageView posterView=(ImageView)rootView.findViewById(R.id.dMoviePoster);
+            Picasso.with(getContext()).load(BASE_URL+poster_path).into(posterView );
+            TextView dateView=(TextView)rootView.findViewById(R.id.dMovieDate);
+            dateView.setText(release_date);
+            TextView rateView=(TextView)rootView.findViewById(R.id.dMovieRate);
+            rateView.setText(vote_average+"/10");
+            TextView durationView=(TextView)rootView.findViewById(R.id.dMovieTime);
+            durationView.setText(release_date.substring(0,4));
+            TextView overviewView=(TextView)rootView.findViewById(R.id.dMovieOverview);
+            overviewView.setText(overview);
+            overviewView.setMovementMethod(new ScrollingMovementMethod());
+            TextView trailerView=(TextView)rootView.findViewById(R.id.dMovieTrailer);
+            trailerView.setText(overview);
 
 
 
