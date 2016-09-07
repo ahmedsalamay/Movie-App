@@ -7,11 +7,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity  extends AppCompatActivity {
-
+    private final static  String DETAILFRAGMENT_TAG="DFTAG";
+    private boolean  mTwoPane;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(findViewById(R.id.detail_container)!=null){
+            mTwoPane=true;
+
+            if(savedInstanceState==null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.detail_container,new DetailActivityFragment()
+                                ,DETAILFRAGMENT_TAG)
+                        .commit();
+            }else{
+                mTwoPane=false;
+            }
+        }
     }
 
     @Override

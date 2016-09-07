@@ -68,9 +68,9 @@ public class DetailActivityFragment extends Fragment {
             overviewView.setMovementMethod(new ScrollingMovementMethod());
             TextView trailerView=(TextView)rootView.findViewById(R.id.dMovieTrailer);
             trailerView.setText(overview);
-
-
-
+        }
+        if(intent==null||intent.getData()==null){
+            return  null;
         }
         return rootView;
     }
