@@ -13,8 +13,13 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
+            Bundle args =new Bundle();
+            args.putString(DetailActivityFragment.DETAIL_URI,getIntent()
+                    .getStringExtra(Intent.EXTRA_TEXT));
+            DetailActivityFragment fragment=new DetailActivityFragment();
+            fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.detail_container, new DetailActivityFragment())
+                    .add(R.id.detail_container, fragment)
                     .commit();
         }
     }

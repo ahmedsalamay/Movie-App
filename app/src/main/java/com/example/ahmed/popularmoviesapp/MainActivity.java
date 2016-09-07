@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity  extends AppCompatActivity {
+public class MainActivity  extends AppCompatActivity implements MainActivityFragment.Callback {
     private final static  String DETAILFRAGMENT_TAG="DFTAG";
     private boolean  mTwoPane;
     @Override
@@ -42,5 +42,22 @@ public class MainActivity  extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(String uriString) {
+        if(mTwoPane){
+            Bundle args=new Bundle();
+            args.putString(DetailActivityFragment.DETAIL_URI,uriString);
+            DetailActivityFragment fragment =new DetailActivityFragment();
+            fragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction().replace(R.id.detail_container,fragment,
+                    DETAILFRAGMENT_TAG).commit();
+
+        }else{
+            Intent intent=new Intent(this,DetailActivity.class)
+                    .putExtra(Intent.EXTRA_TEXT,uriString);
+            startActivity(intent);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.ahmed.popularmoviesapp;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 public class DetailActivityFragment extends Fragment {
     private final  static String LOG_TAG=DetailActivityFragment.class.getName();
     private static final String BASE_URL="http://image.tmdb.org/t/p/w185//";
+    final static String DETAIL_URI="URI";
 
     private String poster_path;
     private String overview;
@@ -39,13 +39,22 @@ public class DetailActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_detail_activity, container, false);
-        Intent intent=getActivity().getIntent();
-        if(intent!=null&&intent.hasExtra(Intent.EXTRA_TEXT)){
-            String info =intent.getStringExtra(Intent.EXTRA_TEXT);
+        //Intent intent=getActivity().getIntent();
+        //if(intent!=null&&intent.hasExtra(Intent.EXTRA_TEXT)){
+            //String info =intent.getStringExtra(Intent.EXTRA_TEXT);
+            //ArrayList<String> movieInfo=new ArrayList<>();
+            //for (String retval: info.split("\\+")){
+            //    movieInfo.add(retval);
+          //  }
+
+        Bundle args=getArguments();
+        if(args!=null){
+
+            String info =args.getString(DetailActivityFragment.DETAIL_URI);
             ArrayList<String> movieInfo=new ArrayList<>();
             for (String retval: info.split("\\+")){
                 movieInfo.add(retval);
-            }
+        }
 
             original_title=movieInfo.get(0);
             poster_path=movieInfo.get(1);
@@ -68,10 +77,10 @@ public class DetailActivityFragment extends Fragment {
             overviewView.setMovementMethod(new ScrollingMovementMethod());
             TextView trailerView=(TextView)rootView.findViewById(R.id.dMovieTrailer);
             trailerView.setText(overview);
-        }
+        }/*
         if(intent==null||intent.getData()==null){
             return  null;
-        }
+        }*/
         return rootView;
     }
 
