@@ -58,7 +58,9 @@ public class MainActivityFragment extends Fragment {
                         .append(movie.getPoster_path()).append("+")
                         .append(movie.getOverview()).append("+")
                         .append(movie.getRelease_date()).append("+")
-                        .append(movie.getVote_average());
+                        .append(movie.getVote_average()).append("+")
+                        .append(movie.getId());
+
                 /*Intent intent=new Intent(getActivity(),DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT,stringBuilder.toString());
                 startActivity(intent);

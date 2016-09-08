@@ -1,18 +1,24 @@
 package com.example.ahmed.popularmoviesapp;
 
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,13 +27,18 @@ import java.util.ArrayList;
 public class DetailActivityFragment extends Fragment {
     private final  static String LOG_TAG=DetailActivityFragment.class.getName();
     private static final String BASE_URL="http://image.tmdb.org/t/p/w185//";
-    final static String DETAIL_URI="URI";
+     final static String DETAIL_URI="URI";
+    private final static String BASETRAILER="http://api.themoviedb.org/3/movie/";
+
+
 
     private String poster_path;
     private String overview;
     private String release_date;
     private String original_title;
     private String vote_average;
+    private String id;
+    private TrailerAdabter mTrailerAdabter;
 
     public DetailActivityFragment() {
         // Required empty public constructor
@@ -61,6 +72,7 @@ public class DetailActivityFragment extends Fragment {
             overview=movieInfo.get(2);
             release_date=movieInfo.get(3);
             vote_average=movieInfo.get(4);
+            id=movieInfo.get(5);
 
             TextView titleView=(TextView)rootView.findViewById(R.id.dMovieTitle);
             titleView.setText(original_title);
@@ -75,13 +87,45 @@ public class DetailActivityFragment extends Fragment {
             TextView overviewView=(TextView)rootView.findViewById(R.id.dMovieOverview);
             overviewView.setText(overview);
             overviewView.setMovementMethod(new ScrollingMovementMethod());
-            TextView trailerView=(TextView)rootView.findViewById(R.id.dMovieTrailer);
-            trailerView.setText(overview);
-        }/*
+
+        }
+        mTrailerAdabter=new TrailerAdabter(getActivity(),  new ArrayList<Trailer>());
+        ListView trailerListView=(ListView)rootView.findViewById(R.id.trailer_list);
+        trailerListView.setAdapter(mTrailerAdabter);
+        TrailerQuerry trailerQuerry=new TrailerQuerry();
+        trailerQuerry.execute(BASETRAILER+id+"/videos?api_key="+BuildConfig.Movie_MAP_API_KEY);
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String youtubeUrl="http://www.youtube.com/watch?v="
+                        +mTrailerAdabter.getItem(position).getTrailerKey();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)));
+            }
+        });
+        /*
         if(intent==null||intent.getData()==null){
             return  null;
         }*/
         return rootView;
+    }
+
+    private class  TrailerQuerry extends AsyncTask<String,Void,List<Trailer>> {
+        @Override
+        protected List<Trailer> doInBackground(String... urls) {
+            if(urls[0]==null||urls.length<1){
+                return null;
+            }
+            List<Trailer>trailerList=QueryUtils.fetchTrailerData(urls[0]);
+            return trailerList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Trailer>trailers ) {
+            mTrailerAdabter.clear();
+            if(trailers!=null||!trailers.isEmpty()){
+                mTrailerAdabter.addAll(trailers);
+            }
+        }
     }
 
 }

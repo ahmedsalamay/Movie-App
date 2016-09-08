@@ -33,6 +33,33 @@ public final class QueryUtils {
         List<Movie>movieList=extractMovies(jsonResponse);
         return movieList;
     }
+    public static List<Trailer> fetchTrailerData(String urlString){
+        URL url=createUrl(urlString);
+        String jsonResponse="";
+        try{
+            jsonResponse=makeHttpRequest(url);
+        }catch (IOException e){
+            Log.e(LOG_TAG,"problem in make http request",e);
+        }
+        List<Trailer>trailerList=extractTrailers(jsonResponse);
+        return trailerList;
+    }
+    private static ArrayList<Trailer>extractTrailers(String jsonResponse){
+        ArrayList<Trailer> trailers=new ArrayList<>();
+        try{
+            JSONObject baseJsonResonse=new JSONObject(jsonResponse);
+            JSONArray jsonArrayTrailer=(JSONArray)baseJsonResonse.get("results");
+            for(int i=0;i<jsonArrayTrailer.length();i++){
+                JSONObject currentTrailer =jsonArrayTrailer.getJSONObject(i);
+                Trailer trailer=new Trailer(currentTrailer.getString("key")
+                        ,currentTrailer.getString("name"));
+                trailers.add(trailer);
+            }
+        }catch (JSONException e){
+            Log.e("QueryUtil","Problem Parcing Json",e);
+        }
+        return trailers;
+    }
     private static ArrayList<Movie> extractMovies(String jsonResponse){
         // Create an empty ArrayList that we can start adding earthquakes to
         ArrayList<Movie>movies=new ArrayList<>();
@@ -49,7 +76,8 @@ public final class QueryUtils {
                 String relase_date=currentMovie.getString("release_date");;
                 String title=currentMovie.getString("original_title");;
                 String rate=currentMovie.getString("vote_average");;
-                Movie movie=new Movie(title,overview,path,relase_date,rate);
+                String id=currentMovie.getString("id");
+                Movie movie=new Movie(title,overview,path,relase_date,rate,id);
                 movies.add(movie);
             }
             // If an error is thrown when executing any of the above statements in the "try" block,
@@ -70,15 +98,15 @@ public final class QueryUtils {
         try {
             urlConnection=(HttpURLConnection)url.openConnection();
             urlConnection.setRequestMethod("GET");
-            urlConnection.setReadTimeout(10000);
-            urlConnection.setConnectTimeout(15000);
+            /*urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);*/
             urlConnection.connect();
             if(urlConnection.getResponseCode()==200){
                 inputStream=urlConnection.getInputStream();
                 jsonResponse=readFromSream(inputStream);
             }
             else{
-                Log.e(LOG_TAG,"Problem in site response" +urlConnection.getResponseCode());
+                Log.e(LOG_TAG,"Problem in site response" +urlConnection.getResponseCode()+"\n URL: "+url.toString());
             }
         }catch (IOException e){
             Log.e(LOG_TAG,"Problem retrive json",e);

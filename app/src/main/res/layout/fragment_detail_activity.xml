@@ -1,5 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -16,6 +20,7 @@
         android:id="@+id/dMovieTitle"
         tools:text="Civil War"
         android:background="#57afa6" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +31,7 @@
                 android:layout_width="149dp"
                 android:layout_height="223dp"
                 android:id="@+id/dMoviePoster"
-                tools:src="@drawable/inter"
+                tools:src="@drawable/sortby"
                 android:layout_marginLeft="16dp" />
 
             <LinearLayout
@@ -64,8 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:maxLines = "3"
-        android:scrollbars = "vertical"
         android:layout_weight="0"
         android:id="@+id/dMovieOverview"
         tools:text="Following the events of Age of Ultron, the collective governments of
@@ -79,14 +82,13 @@ an epic battle between former allies" />
         android:background="#FF000000"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <ListView
+        android:id="@+id/trailer_list"
         android:padding="16dp"
-        android:id="@+id/dMovieTrailer"
-        tools:text="Tlairer 1
-Trailer 2"
-        android:layout_weight="0.69" />
-
+        android:nestedScrollingEnabled="true"
+        android:fillViewport="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
+</ScrollView>

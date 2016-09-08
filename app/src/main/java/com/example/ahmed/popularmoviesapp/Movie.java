@@ -24,16 +24,17 @@ public class Movie {
     public int path;
     private String overview;
     private String release_date;
-    private int id;
+    private String id;
     private String original_title;
     private String vote_average;
 
-    public Movie(String original_title, String overview, String poster_path, String release_date, String vote_average) {
+    public Movie(String original_title, String overview, String poster_path, String release_date, String vote_average,String id) {
         this.original_title = original_title;
         this.overview = overview;
         this.poster_path = poster_path;
         this.release_date = release_date;
         this.vote_average = vote_average;
+        this.id=id;
     }
 
     public Movie(int path) {
@@ -64,11 +65,11 @@ public class Movie {
             this.release_date = release_date;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 
