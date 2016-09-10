@@ -44,22 +44,20 @@ public final class QueryUtils {
         List<Trailer>trailerList=extractTrailers(jsonResponse);
         return trailerList;
     }
-    private static ArrayList<Trailer>extractTrailers(String jsonResponse){
-        ArrayList<Trailer> trailers=new ArrayList<>();
+
+
+    public static List<Reviews> fetchReviewsData(String urlString){
+        URL url=createUrl(urlString);
+        String jsonResponse="";
         try{
-            JSONObject baseJsonResonse=new JSONObject(jsonResponse);
-            JSONArray jsonArrayTrailer=(JSONArray)baseJsonResonse.get("results");
-            for(int i=0;i<jsonArrayTrailer.length();i++){
-                JSONObject currentTrailer =jsonArrayTrailer.getJSONObject(i);
-                Trailer trailer=new Trailer(currentTrailer.getString("key")
-                        ,currentTrailer.getString("name"));
-                trailers.add(trailer);
-            }
-        }catch (JSONException e){
-            Log.e("QueryUtil","Problem Parcing Json",e);
+            jsonResponse=makeHttpRequest(url);
+        }catch (IOException e){
+            Log.e(LOG_TAG,"problem in make http request",e);
         }
-        return trailers;
+        List<Reviews>reviewses=extractReviews(jsonResponse);
+        return reviewses;
     }
+
     private static ArrayList<Movie> extractMovies(String jsonResponse){
         // Create an empty ArrayList that we can start adding earthquakes to
         ArrayList<Movie>movies=new ArrayList<>();
@@ -87,6 +85,39 @@ public final class QueryUtils {
             Log.e("QueryUtil","Problem Parcing Json",e);
         }
         return movies;
+    }
+    private static ArrayList<Trailer>extractTrailers(String jsonResponse){
+        ArrayList<Trailer> trailers=new ArrayList<>();
+        try{
+            JSONObject baseJsonResonse=new JSONObject(jsonResponse);
+            JSONArray jsonArrayTrailer=(JSONArray)baseJsonResonse.get("results");
+            for(int i=0;i<jsonArrayTrailer.length();i++){
+                JSONObject currentTrailer =jsonArrayTrailer.getJSONObject(i);
+                Trailer trailer=new Trailer(currentTrailer.getString("key")
+                        ,currentTrailer.getString("name"));
+                trailers.add(trailer);
+            }
+        }catch (JSONException e){
+            Log.e("QueryUtil","Problem Parcing Json",e);
+        }
+        return trailers;
+    }
+    private  static  ArrayList<Reviews>extractReviews(String jsonResponse){
+        ArrayList<Reviews>reviewsArrayList=new ArrayList<>();
+        try{
+            JSONObject baseJsonResonse=new JSONObject(jsonResponse);
+            JSONArray jsonArrayReviews=(JSONArray)baseJsonResonse.get("results");
+            for(int i=0;i<jsonArrayReviews.length();i++){
+                JSONObject currentReviews =jsonArrayReviews.getJSONObject(i);
+                Reviews reviews=new Reviews(currentReviews.getString("author")
+                        ,currentReviews.getString("content"),currentReviews.getString("url"));
+                reviewsArrayList.add(reviews);
+            }
+        }catch (JSONException e){
+            Log.e("QueryUtil","Problem Parcing Json",e);
+        }
+        return reviewsArrayList;
+
     }
     private static String makeHttpRequest(URL url)throws IOException{
         String jsonResponse="";

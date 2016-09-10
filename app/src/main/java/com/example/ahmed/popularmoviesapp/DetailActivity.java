@@ -1,8 +1,8 @@
 package com.example.ahmed.popularmoviesapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,6 +22,8 @@ public class DetailActivity extends AppCompatActivity {
                     .add(R.id.detail_container, fragment)
                     .commit();
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -36,6 +38,11 @@ public class DetailActivity extends AppCompatActivity {
         if(id==R.id.action_settings){
             Intent settingIntent=new Intent(this,SettingsActivity.class);
             startActivity(settingIntent);
+            return true;
+        }
+        if (id == android.R.id.home) {
+            //   startActivity(new Intent(this, MainActivity.class));
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

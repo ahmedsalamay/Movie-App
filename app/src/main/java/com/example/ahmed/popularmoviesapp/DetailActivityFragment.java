@@ -28,8 +28,11 @@ public class DetailActivityFragment extends Fragment {
     private final  static String LOG_TAG=DetailActivityFragment.class.getName();
     private static final String BASE_URL="http://image.tmdb.org/t/p/w185//";
      final static String DETAIL_URI="URI";
-    private final static String BASETRAILER="http://api.themoviedb.org/3/movie/";
-
+    private final static String BASE_INFO="http://api.themoviedb.org/3/movie/";
+    private  String mReviewsAuthor;
+    private  String mReviewsContent;
+    private  String mReviewsUrl;
+    private ArrayList<Reviews>mReviewsArrayList=new ArrayList<>();
 
 
     private String poster_path;
@@ -39,17 +42,16 @@ public class DetailActivityFragment extends Fragment {
     private String vote_average;
     private String id;
     private TrailerAdabter mTrailerAdabter;
-
+   private ReviewsAdapter mReviewsAdapter;
     public DetailActivityFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_detail_activity, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_detail_activity, container, false);
         //Intent intent=getActivity().getIntent();
         //if(intent!=null&&intent.hasExtra(Intent.EXTRA_TEXT)){
             //String info =intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -92,8 +94,14 @@ public class DetailActivityFragment extends Fragment {
         mTrailerAdabter=new TrailerAdabter(getActivity(),  new ArrayList<Trailer>());
         ListView trailerListView=(ListView)rootView.findViewById(R.id.trailer_list);
         trailerListView.setAdapter(mTrailerAdabter);
+
+        ListView reviewsListView=(ListView)rootView.findViewById(R.id.review_list);
+        mReviewsAdapter=new ReviewsAdapter(getContext(), new ArrayList<Reviews>());
+        reviewsListView.setAdapter(mReviewsAdapter);
+
         TrailerQuerry trailerQuerry=new TrailerQuerry();
-        trailerQuerry.execute(BASETRAILER+id+"/videos?api_key="+BuildConfig.Movie_MAP_API_KEY);
+        trailerQuerry.execute(BASE_INFO+id+"/videos?api_key="+BuildConfig.Movie_MAP_API_KEY,
+                BASE_INFO+id+"/reviews?api_key="+BuildConfig.Movie_MAP_API_KEY);
         trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -116,14 +124,19 @@ public class DetailActivityFragment extends Fragment {
                 return null;
             }
             List<Trailer>trailerList=QueryUtils.fetchTrailerData(urls[0]);
+            mReviewsArrayList=(ArrayList<Reviews>) QueryUtils.fetchReviewsData(urls[1]);
             return trailerList;
         }
 
         @Override
         protected void onPostExecute(List<Trailer>trailers ) {
             mTrailerAdabter.clear();
+            mReviewsAdapter.clear();
             if(trailers!=null||!trailers.isEmpty()){
                 mTrailerAdabter.addAll(trailers);
+            }
+            if(mReviewsArrayList!=null||!mReviewsArrayList.isEmpty()){
+                mReviewsAdapter.addAll(mReviewsArrayList);
             }
         }
     }

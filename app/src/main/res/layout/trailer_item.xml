@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/sortby"/>
     <TextView
         android:id="@+id/trailer_name"
