@@ -51,10 +51,18 @@ public class MainActivity  extends AppCompatActivity implements MainActivityFrag
             args.putString(DetailActivityFragment.DETAIL_URI,uriString);
             DetailActivityFragment fragment =new DetailActivityFragment();
             fragment.setArguments(args);
+            Bundle two=new Bundle();
+            two.putBoolean("Two",true);
+            MainActivityFragment mainActivityFragment=new MainActivityFragment();
+            mainActivityFragment.setArguments(two);
             getSupportFragmentManager().beginTransaction().replace(R.id.detail_container,fragment,
                     DETAILFRAGMENT_TAG).commit();
 
         }else{
+            Bundle two=new Bundle();
+            two.putBoolean("Two",false);
+            MainActivityFragment mainActivityFragment=new MainActivityFragment();
+            mainActivityFragment.setArguments(two);
             Intent intent=new Intent(this,DetailActivity.class)
                     .putExtra(Intent.EXTRA_TEXT,uriString);
             startActivity(intent);

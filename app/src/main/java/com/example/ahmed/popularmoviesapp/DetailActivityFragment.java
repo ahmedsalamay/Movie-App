@@ -58,13 +58,6 @@ public class DetailActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_detail_activity, container, false);
-        //Intent intent=getActivity().getIntent();
-        //if(intent!=null&&intent.hasExtra(Intent.EXTRA_TEXT)){
-            //String info =intent.getStringExtra(Intent.EXTRA_TEXT);
-            //ArrayList<String> movieInfo=new ArrayList<>();
-            //for (String retval: info.split("\\+")){
-            //    movieInfo.add(retval);
-          //  }
 
         Bundle args=getArguments();
         if(args!=null){

@@ -2,6 +2,8 @@ package com.example.ahmed.popularmoviesapp;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,8 @@ public class MainActivityFragment extends Fragment {
     private DataBaseHandler mDataBaseHandler;
     private List<Movie> mMovies;
     private String mPrevStatus;
+    private View loadingIndicator;
+    private TextView mEmptyStateTextView;
     public MainActivityFragment(){
     }
       public interface Callback{
@@ -61,35 +67,49 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.grid_view, container, false);
-
-        mMovieAdapter = new MovieAdapter(getActivity(), new ArrayList<Movie>());
-
+        Bundle two=new Bundle();
+        mMovieAdapter = new MovieAdapter(getActivity(), new ArrayList<Movie>(),two.getBoolean("Two",false));
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
         gridView.setAdapter(mMovieAdapter);
-
+        mEmptyStateTextView=(TextView)rootView.findViewById(R.id.empty_view);
+        gridView.setEmptyView(mEmptyStateTextView);
         SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences
                 (getActivity());
         String sortBy=sharedPreferences.getString(
                 getString(R.string.key_sort_type),
                 getString(R.string.defualt_sort_type)
         );
+        loadingIndicator=(rootView).findViewById(R.id.loading_indicator);
         mPrevStatus=sortBy;
         if(sortBy.equals("fav")) {
-
-            mDataBaseHandler=new DataBaseHandler(getActivity());
+            loadingIndicator.setVisibility(View.GONE);
+            mDataBaseHandler = new DataBaseHandler(getActivity());
             mMovieAdapter.clear();
-            mMovies=mDataBaseHandler.getAllMovies();
-            if(mMovies!=null||!mMovies.isEmpty()){
+            mMovies = mDataBaseHandler.getAllMovies();
+            if (mMovies != null || !mMovies.isEmpty()) {
                 mMovieAdapter.addAll(mMovies);
-        }
+            }
         }
         else{
-            TMDBQuerry tmdbQuerry=new TMDBQuerry();
-            StringBuilder uriString = new StringBuilder();
-            uriString.append(BASE_URL).append(sortBy)
-                    .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
-            tmdbQuerry.execute(uriString.toString());
+            ConnectivityManager cm =
+                    (ConnectivityManager)getActivity()
+                            .getSystemService(getActivity().CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+            if(isConnected) {
+                TMDBQuerry tmdbQuerry = new TMDBQuerry();
+                StringBuilder uriString = new StringBuilder();
+                uriString.append(BASE_URL).append(sortBy)
+                        .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
+                tmdbQuerry.execute(uriString.toString());
+            }else {
+                loadingIndicator.setVisibility(View.GONE);
+                mEmptyStateTextView.setText("No Internet Conection");
+                Toast.makeText(getActivity(), "No Internet Connection !", Toast.LENGTH_LONG).show();
+            }
+
         }
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -107,6 +127,7 @@ public class MainActivityFragment extends Fragment {
                 ((Callback)getActivity()).onItemSelected(stringBuilder.toString());
             }
         });
+           gridView.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
         return rootView;
 
@@ -128,6 +149,9 @@ public class MainActivityFragment extends Fragment {
             if(movies!=null||!movies.isEmpty()){
                 mMovieAdapter.addAll(movies);
             }
+            loadingIndicator.setVisibility(View.GONE);
+            mEmptyStateTextView.setText("No Internet");
         }
+
     }
 }

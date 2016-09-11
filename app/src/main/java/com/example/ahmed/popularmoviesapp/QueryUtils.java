@@ -129,8 +129,8 @@ public final class QueryUtils {
         try {
             urlConnection=(HttpURLConnection)url.openConnection();
             urlConnection.setRequestMethod("GET");
-            /*urlConnection.setReadTimeout(10000);
-            urlConnection.setConnectTimeout(15000);*/
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
             urlConnection.connect();
             if(urlConnection.getResponseCode()==200){
                 inputStream=urlConnection.getInputStream();
