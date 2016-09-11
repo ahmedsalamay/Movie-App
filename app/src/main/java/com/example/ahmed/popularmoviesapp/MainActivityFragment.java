@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,42 @@ public class MainActivityFragment extends Fragment {
     private static final String BASE_URL="http://api.themoviedb.org/3/movie/";
     private static final String KEY_QUERY="?api_key=";
     private DataBaseHandler mDataBaseHandler;
-   private List<Movie> mMovies;
+    private List<Movie> mMovies;
+    private String mPrevStatus;
     public MainActivityFragment(){
     }
       public interface Callback{
           public void onItemSelected(String uriString);
       }
+
+    @Override
+    public void onResume() {
+        SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences
+                (getActivity());
+        String sortBy=sharedPreferences.getString(
+                getString(R.string.key_sort_type),
+                getString(R.string.defualt_sort_type));
+        if(mPrevStatus!=sortBy){
+            if(sortBy.equals("fav")) {
+
+                mDataBaseHandler=new DataBaseHandler(getActivity());
+                mMovieAdapter.clear();
+                mMovies=mDataBaseHandler.getAllMovies();
+                if(mMovies!=null||!mMovies.isEmpty()){
+                    mMovieAdapter.addAll(mMovies);
+                }
+            }
+            else{
+                TMDBQuerry tmdbQuerry=new TMDBQuerry();
+                StringBuilder uriString = new StringBuilder();
+                uriString.append(BASE_URL).append(sortBy)
+                        .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
+                tmdbQuerry.execute(uriString.toString());
+            }
+        }
+        super.onResume();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +74,7 @@ public class MainActivityFragment extends Fragment {
                 getString(R.string.key_sort_type),
                 getString(R.string.defualt_sort_type)
         );
+        mPrevStatus=sortBy;
         if(sortBy.equals("fav")) {
 
             mDataBaseHandler=new DataBaseHandler(getActivity());
@@ -52,8 +82,6 @@ public class MainActivityFragment extends Fragment {
             mMovies=mDataBaseHandler.getAllMovies();
             if(mMovies!=null||!mMovies.isEmpty()){
                 mMovieAdapter.addAll(mMovies);
-                Log.e(LOG_TAG,"Ima HEREEEEEEEEEE FAV");
-
         }
         }
         else{
@@ -62,8 +90,8 @@ public class MainActivityFragment extends Fragment {
             uriString.append(BASE_URL).append(sortBy)
                     .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
             tmdbQuerry.execute(uriString.toString());
-            Log.e(LOG_TAG,"Ima HEREEEEEEEEEE ELSE");
         }
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
