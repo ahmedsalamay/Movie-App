@@ -71,10 +71,12 @@
     <string-array name="sort_values">
         <item>popular</item>
         <item>top_rated</item>
+        <item>fav</item>>
     </string-array>
     <string-array name="sort_title">
         <item>Most Popular</item>
         <item>Top Rated</item>
+        <item>Favorite</item>
     </string-array>
 
 

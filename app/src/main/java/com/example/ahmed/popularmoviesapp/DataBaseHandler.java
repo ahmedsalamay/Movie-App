@@ -49,14 +49,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     public ArrayList<Movie> getAllMovies(){
 
-        //int i=0;
-       // String res_id,res_url,res_date,res_rate,res_description,res_title;
-        //Movie movieInfo[] = new Movie[getMoviesCount()];
         ArrayList<Movie>  movieArrayList=new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("select * from favorites",null);
         cursor.moveToFirst();
-        //Log.d("Size l array kollo " , String.valueOf(movieInfo.length));
 
         while (!cursor.isAfterLast()) {
             movieArrayList.add(new Movie(cursor.getString(cursor.getColumnIndex("title")),
@@ -68,35 +64,9 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             ));
             cursor.moveToNext();
         }
-            /*
-            res_id =res.getString(res.getColumnIndex("id"));
-            res_url = res.getString(res.getColumnIndex("url"));
-            res_date = res.getString(res.getColumnIndex("date"));
-            res_rate  = res.getString(res.getColumnIndex("rate"));
-            res_description = res.getString(res.getColumnIndex("description"));
-            res_title = res.getString(res.getColumnIndex("title"));
-          //  if(i==movieInfo.length)
-             //   break;
-           // movieInfo[i] = new Movie(res_title,res_description,res_url,res_date,res_rate,res_id);
-            res.moveToNext();
-         //   i++;
-            //Log.d("Salama",""+i);
-        }
-        return new ArrayList<Movie>(Arrays.asList(movieInfo));
-        */
+
             return movieArrayList;
     }
-
-    public int getMoviesCount() {
-        String countQuery = "SELECT * FROM favorites" ;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int cnt = cursor.getCount();
-        cursor.close();
-        return cnt;
-    }
-
-
 
     public boolean removeMovie(String id){
         String query = "DELETE FROM favorites WHERE id="+id;

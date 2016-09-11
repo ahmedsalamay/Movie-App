@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,11 @@ import java.util.List;
 //BuildConfig.OPEN_WEATHER_MAP_API_KEY
 public class MainActivityFragment extends Fragment {
     private MovieAdapter mMovieAdapter;
+    private  static String LOG_TAG=MainActivityFragment.class.getName();
     private static final String BASE_URL="http://api.themoviedb.org/3/movie/";
     private static final String KEY_QUERY="?api_key=";
-    List<Movie> movies;
+    private DataBaseHandler mDataBaseHandler;
+   private List<Movie> mMovies;
     public MainActivityFragment(){
     }
       public interface Callback{
@@ -35,7 +38,6 @@ public class MainActivityFragment extends Fragment {
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
         gridView.setAdapter(mMovieAdapter);
-        TMDBQuerry tmdbQuerry=new TMDBQuerry();
 
         SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences
                 (getActivity());
@@ -43,11 +45,25 @@ public class MainActivityFragment extends Fragment {
                 getString(R.string.key_sort_type),
                 getString(R.string.defualt_sort_type)
         );
-        StringBuilder uriString=new StringBuilder();
-        uriString.append(BASE_URL).append(sortBy)
-                .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
+        if(sortBy.equals("fav")) {
 
-        tmdbQuerry.execute(uriString.toString());
+            mDataBaseHandler=new DataBaseHandler(getActivity());
+            mMovieAdapter.clear();
+            mMovies=mDataBaseHandler.getAllMovies();
+            if(mMovies!=null||!mMovies.isEmpty()){
+                mMovieAdapter.addAll(mMovies);
+                Log.e(LOG_TAG,"Ima HEREEEEEEEEEE FAV");
+
+        }
+        }
+        else{
+            TMDBQuerry tmdbQuerry=new TMDBQuerry();
+            StringBuilder uriString = new StringBuilder();
+            uriString.append(BASE_URL).append(sortBy)
+                    .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
+            tmdbQuerry.execute(uriString.toString());
+            Log.e(LOG_TAG,"Ima HEREEEEEEEEEE ELSE");
+        }
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,15 +76,10 @@ public class MainActivityFragment extends Fragment {
                         .append(movie.getRelease_date()).append("+")
                         .append(movie.getVote_average()).append("+")
                         .append(movie.getId());
-
-                /*Intent intent=new Intent(getActivity(),DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT,stringBuilder.toString());
-                startActivity(intent);
-               // Toast.makeText(getActivity(),test,Toast.LENGTH_SHORT).show();
-               */
                 ((Callback)getActivity()).onItemSelected(stringBuilder.toString());
             }
         });
+////////////////////////////////////////////////////////////////////////////////////////////////////
         return rootView;
 
     }
