@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +35,8 @@ public class DetailActivityFragment extends Fragment {
     private  String mReviewsAuthor;
     private  String mReviewsContent;
     private  String mReviewsUrl;
+    private DataBaseHandler mDataBaseHandler;
+    private  FloatingActionButton fab;
     private ArrayList<Reviews>mReviewsArrayList=new ArrayList<>();
 
 
@@ -46,6 +51,7 @@ public class DetailActivityFragment extends Fragment {
     public DetailActivityFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +96,38 @@ public class DetailActivityFragment extends Fragment {
             overviewView.setText(overview);
             overviewView.setMovementMethod(new ScrollingMovementMethod());
 
+              mDataBaseHandler=new DataBaseHandler(getActivity());
+
+             fab=(FloatingActionButton)rootView.findViewById(R.id.fab);
+            if (mDataBaseHandler.isFavorite(id)) {
+                fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fav));
+            } else {
+                fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.un_fav));
+            }
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mDataBaseHandler.isFavorite(id)) {
+                        fab.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.un_fav));
+                        Toast.makeText(getActivity(), "Removed From Favorite list", Toast.LENGTH_SHORT).show();
+                        mDataBaseHandler.removeMovie(id);
+
+                    } else {
+                        fab.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.fav));
+                        Toast.makeText(getActivity(), "Add From Favorite list", Toast.LENGTH_SHORT).show();
+                        mDataBaseHandler.addMovie(id, poster_path, release_date, vote_average, overview, original_title);
+                        ArrayList<Movie> movies = mDataBaseHandler.getAllMovies();
+                        for (int i = 0; i < movies.size(); i++) {
+                            Toast.makeText(getActivity(), movies.get(i).getOriginal_title() + " \n", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                }
+            });
+
+
         }
         mTrailerAdabter=new TrailerAdabter(getActivity(),  new ArrayList<Trailer>());
         ListView trailerListView=(ListView)rootView.findViewById(R.id.trailer_list);
@@ -104,10 +142,11 @@ public class DetailActivityFragment extends Fragment {
                 BASE_INFO+id+"/reviews?api_key="+BuildConfig.Movie_MAP_API_KEY);
         trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
                 String youtubeUrl="http://www.youtube.com/watch?v="
                         +mTrailerAdabter.getItem(position).getTrailerKey();
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl)));
+
             }
         });
         /*
