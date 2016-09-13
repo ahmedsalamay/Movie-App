@@ -32,9 +32,6 @@ public class DetailActivityFragment extends Fragment {
     private static final String BASE_URL="http://image.tmdb.org/t/p/w185//";
      final static String DETAIL_URI="URI";
     private final static String BASE_INFO="http://api.themoviedb.org/3/movie/";
-    private  String mReviewsAuthor;
-    private  String mReviewsContent;
-    private  String mReviewsUrl;
     private DataBaseHandler mDataBaseHandler;
     private  FloatingActionButton fab;
     private ArrayList<Reviews>mReviewsArrayList=new ArrayList<>();
@@ -56,7 +53,6 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_detail_activity, container, false);
 
         Bundle args=getArguments();
@@ -83,8 +79,7 @@ public class DetailActivityFragment extends Fragment {
             dateView.setText(release_date);
             TextView rateView=(TextView)rootView.findViewById(R.id.dMovieRate);
             rateView.setText(vote_average+"/10");
-            TextView durationView=(TextView)rootView.findViewById(R.id.dMovieTime);
-            durationView.setText(release_date.substring(0,4));
+            //durationView.setText(release_date.substring(0,4));
             TextView overviewView=(TextView)rootView.findViewById(R.id.dMovieOverview);
             overviewView.setText(overview);
             overviewView.setMovementMethod(new ScrollingMovementMethod());
@@ -110,10 +105,6 @@ public class DetailActivityFragment extends Fragment {
                         fab.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.fav));
                         Toast.makeText(getActivity(), "Add From Favorite list", Toast.LENGTH_SHORT).show();
                         mDataBaseHandler.addMovie(id, poster_path, release_date, vote_average, overview, original_title);
-                        ArrayList<Movie> movies = mDataBaseHandler.getAllMovies();
-                        for (int i = 0; i < movies.size(); i++) {
-                            Toast.makeText(getActivity(), movies.get(i).getOriginal_title() + " \n", Toast.LENGTH_SHORT).show();
-                        }
                     }
 
 
@@ -131,8 +122,10 @@ public class DetailActivityFragment extends Fragment {
         reviewsListView.setAdapter(mReviewsAdapter);
 
         TrailerQuerry trailerQuerry=new TrailerQuerry();
-        trailerQuerry.execute(BASE_INFO+id+"/videos?api_key="+BuildConfig.Movie_MAP_API_KEY,
-                BASE_INFO+id+"/reviews?api_key="+BuildConfig.Movie_MAP_API_KEY);
+        if(id!=null ) {
+            trailerQuerry.execute(BASE_INFO + id + "/videos?api_key=" + BuildConfig.Movie_MAP_API_KEY,
+                    BASE_INFO + id + "/reviews?api_key=" + BuildConfig.Movie_MAP_API_KEY);
+        }
         trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, final long id) {
@@ -142,10 +135,6 @@ public class DetailActivityFragment extends Fragment {
 
             }
         });
-        /*
-        if(intent==null||intent.getData()==null){
-            return  null;
-        }*/
         return rootView;
     }
 

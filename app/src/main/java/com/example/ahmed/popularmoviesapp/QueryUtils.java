@@ -1,5 +1,7 @@
 package com.example.ahmed.popularmoviesapp;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -175,5 +177,10 @@ public final class QueryUtils {
             Log.e(LOG_TAG,"Problem building URL:"+urlString,e);
         }
         return url;
+    }
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 }

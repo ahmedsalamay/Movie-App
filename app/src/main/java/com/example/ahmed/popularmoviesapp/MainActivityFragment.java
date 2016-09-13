@@ -1,7 +1,9 @@
 package com.example.ahmed.popularmoviesapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -26,13 +28,16 @@ public class MainActivityFragment extends Fragment {
     private static final String KEY_QUERY="?api_key=";
     private DataBaseHandler mDataBaseHandler;
     private List<Movie> mMovies;
+
     private String mPrevStatus;
     private View loadingIndicator;
     private TextView mEmptyStateTextView;
+    Callback callback;
     public MainActivityFragment(){
     }
       public interface Callback{
           public void onItemSelected(String uriString);
+         // public void activeMovie(Movie movie);
       }
 
     @Override
@@ -44,7 +49,7 @@ public class MainActivityFragment extends Fragment {
                 getString(R.string.defualt_sort_type));
         if(mPrevStatus!=sortBy){
             if(sortBy.equals("fav")) {
-
+                loadingIndicator.setVisibility(View.GONE);
                 mDataBaseHandler=new DataBaseHandler(getActivity());
                 mMovieAdapter.clear();
                 mMovies=mDataBaseHandler.getAllMovies();
@@ -59,6 +64,20 @@ public class MainActivityFragment extends Fragment {
                         .append(KEY_QUERY).append(BuildConfig.Movie_MAP_API_KEY);
                 tmdbQuerry.execute(uriString.toString());
             }
+
+            if(isXLargeTablet(getActivity())) {
+                StringBuilder stringBuilder = new StringBuilder();
+                if(mMovieAdapter.getItem(0)!=null) {
+                    Movie movies = mMovieAdapter.getItem(0);
+                    stringBuilder.append(movies.getOriginal_title()).append("+")
+                            .append(movies.getPoster_path()).append("+")
+                            .append(movies.getOverview()).append("+")
+                            .append(movies.getRelease_date()).append("+")
+                            .append(movies.getVote_average()).append("+")
+                            .append(movies.getId());
+                    callback.onItemSelected(stringBuilder.toString());
+                }
+            }
         }
         super.onResume();
     }
@@ -67,10 +86,11 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.grid_view, container, false);
-        Bundle two=new Bundle();
-        mMovieAdapter = new MovieAdapter(getActivity(), new ArrayList<Movie>(),two.getBoolean("Two",false));
+        mMovieAdapter = new MovieAdapter(getActivity(), new ArrayList<Movie>());
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
+        gridView.setItemChecked(1,true);
+        gridView.setSelection(1);
         gridView.setAdapter(mMovieAdapter);
         mEmptyStateTextView=(TextView)rootView.findViewById(R.id.empty_view);
         gridView.setEmptyView(mEmptyStateTextView);
@@ -127,10 +147,17 @@ public class MainActivityFragment extends Fragment {
                 ((Callback)getActivity()).onItemSelected(stringBuilder.toString());
             }
         });
+
            gridView.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
         return rootView;
 
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        callback=(Callback) getActivity();
     }
 
     private class  TMDBQuerry extends AsyncTask<String,Void,List<Movie>>{
@@ -145,13 +172,27 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
+            mEmptyStateTextView.setText("No Internet");
             mMovieAdapter.clear();
             if(movies!=null||!movies.isEmpty()){
                 mMovieAdapter.addAll(movies);
             }
             loadingIndicator.setVisibility(View.GONE);
-            mEmptyStateTextView.setText("No Internet");
+            if(isXLargeTablet(getActivity())) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(movies.get(0).getOriginal_title()).append("+")
+                        .append(movies.get(0).getPoster_path()).append("+")
+                        .append(movies.get(0).getOverview()).append("+")
+                        .append(movies.get(0).getRelease_date()).append("+")
+                        .append(movies.get(0).getVote_average()).append("+")
+                        .append(movies.get(0).getId());
+                callback.onItemSelected(stringBuilder.toString());
+            }
         }
 
+    }
+    private static boolean isXLargeTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 }

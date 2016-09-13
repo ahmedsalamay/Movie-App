@@ -45,17 +45,10 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dMovieDate"
                     tools:text="2016"
-                    android:padding="4dp"
-                    android:textSize="34sp"
+                    android:padding="8dp"
+                    android:textSize="28sp"
                     android:layout_gravity="center_horizontal" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/dMovieTime"
-                    tools:text="120min"
-                    android:padding="4dp"
-                    android:textSize="24sp"
-                    android:layout_gravity="center_horizontal" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

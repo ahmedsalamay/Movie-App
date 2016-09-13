@@ -8,24 +8,25 @@ import android.view.MenuItem;
 
 public class MainActivity  extends AppCompatActivity implements MainActivityFragment.Callback {
     private final static  String DETAILFRAGMENT_TAG="DFTAG";
+    private final String LOG_TAG=MainActivity.class.getName();
     private boolean  mTwoPane;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(findViewById(R.id.detail_container)!=null){
-            mTwoPane=true;
-
-            if(savedInstanceState==null){
+        if(findViewById(R.id.detail_container)!=null) {
+            mTwoPane = true;
+            if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.detail_container,new DetailActivityFragment()
-                                ,DETAILFRAGMENT_TAG)
+                        .replace(R.id.detail_container, new DetailActivityFragment()
+                                , DETAILFRAGMENT_TAG)
                         .commit();
-            }else{
-                mTwoPane=false;
             }
-        }
+        }else{
+                mTwoPane=false;
+             }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,26 +47,23 @@ public class MainActivity  extends AppCompatActivity implements MainActivityFrag
 
     @Override
     public void onItemSelected(String uriString) {
-        if(mTwoPane){
+        //if(mTwoPane)
+        if(QueryUtils.isTablet(this)){
             Bundle args=new Bundle();
             args.putString(DetailActivityFragment.DETAIL_URI,uriString);
             DetailActivityFragment fragment =new DetailActivityFragment();
             fragment.setArguments(args);
-            Bundle two=new Bundle();
-            two.putBoolean("Two",true);
-            MainActivityFragment mainActivityFragment=new MainActivityFragment();
-            mainActivityFragment.setArguments(two);
-            getSupportFragmentManager().beginTransaction().replace(R.id.detail_container,fragment,
-                    DETAILFRAGMENT_TAG).commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container,fragment
+                            ,DETAILFRAGMENT_TAG)
+                    .commit();
+
 
         }else{
-            Bundle two=new Bundle();
-            two.putBoolean("Two",false);
-            MainActivityFragment mainActivityFragment=new MainActivityFragment();
-            mainActivityFragment.setArguments(two);
             Intent intent=new Intent(this,DetailActivity.class)
                     .putExtra(Intent.EXTRA_TEXT,uriString);
             startActivity(intent);
+
         }
     }
 }

@@ -41,7 +41,6 @@ public class DetailActivity extends AppCompatActivity {
             return true;
         }
         if (id == android.R.id.home) {
-            //   startActivity(new Intent(this, MainActivity.class));
             onBackPressed();
             return true;
         }

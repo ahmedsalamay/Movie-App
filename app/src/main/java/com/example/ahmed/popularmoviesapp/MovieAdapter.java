@@ -2,7 +2,6 @@ package com.example.ahmed.popularmoviesapp;
 
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
      * @param context        The current context. Used to inflate the layout file.
      * @param Movies A List of AndroidFlavor objects to display in a list
      */
-    public MovieAdapter(Activity context, List<Movie> Movies,boolean Two) {
+    public MovieAdapter(Activity context, List<Movie> Movies) {
         // Here, we initialize the ArrayAdapter's internal storage for the context and the list.
         // the second argument is used when the ArrayAdapter is populating a single TextView.
         // Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
@@ -36,9 +35,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         super(context, 0, Movies);
         Context=context;
-        two=Two;
-        if(two){ Log.e(LOG_TAG,"BOOLENnnnnnnnnn TRUE");}
-        else{ Log.e(LOG_TAG,"BOOLEN FALSEeeeeeeeeeeeee");}
+
     }
 
     /**
@@ -66,13 +63,12 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         ImageView iconView = (ImageView) convertView.findViewById(R.id.movie_image);
 
-        if(two){
+        if(QueryUtils.isTablet(getContext())){
             Picasso.with(Context).load(BASE_URL_TWO + movie.getPoster_path()).into(iconView);
 
         }else {
             Picasso.with(Context).load(BASE_URL + movie.getPoster_path()).into(iconView);
         }
-       // Picasso.with(Context).load(BASE_URL_TWO + movie.getPoster_path()).into(iconView);
         return convertView;
     }
 }
